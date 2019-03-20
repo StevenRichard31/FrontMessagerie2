@@ -7,8 +7,11 @@ import { IndexComponent } from './Views/index/index.component';
 import { RegisterUserComponent } from './Views/User/register-user/register-user.component';
 import { ListUserComponent } from './Views/User/list-user/list-user.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HttpErrorResponse} from '@angular/common/http';
 import {UserService} from './Services/user.service';
+import {ProcessHTTPMsgService} from './Services/process-httpmsg.service';
+import { ErrorPageComponent } from './Views/error/error-page/error-page.component';
+import { Error404Component } from './Views/error/error404/error404.component';
 
 
 
@@ -16,7 +19,10 @@ import {UserService} from './Services/user.service';
 const appRoutes: Routes = [
     {path: '', component: IndexComponent},
     {path: 'user/register', component: RegisterUserComponent},
-    {path: 'user/list', component: ListUserComponent}
+    {path: 'user/list', component: ListUserComponent},
+    {path: 'error', component: ErrorPageComponent},
+    {path: 'error404', component: Error404Component},
+    {path: '**', redirectTo: '/error404'}
 ];
 
 @NgModule({
@@ -24,7 +30,9 @@ const appRoutes: Routes = [
     AppComponent,
     IndexComponent,
     RegisterUserComponent,
-    ListUserComponent
+    ListUserComponent,
+    ErrorPageComponent,
+    Error404Component
   ],
   imports: [
     BrowserModule,
@@ -34,7 +42,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes)
   ],
   providers: [
-      UserService
+      UserService,
+      ProcessHTTPMsgService
   ],
   bootstrap: [AppComponent]
 })

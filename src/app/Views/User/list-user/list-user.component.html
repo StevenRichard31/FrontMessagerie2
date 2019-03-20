@@ -18,3 +18,11 @@
     </tbody>
   </table>
 </div>
+
+<div [hidden]="users || errMess">
+   <h4>Loading...</h4>
+</div>
+<div fxFlex *ngIf="errMess">
+  <h2>Error</h2>
+  <h4>{{errMess}}</h4>
+</div>

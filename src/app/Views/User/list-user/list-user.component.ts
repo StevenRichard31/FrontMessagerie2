@@ -12,6 +12,7 @@ import {UserService} from '../../../Services/user.service';
 export class ListUserComponent implements OnInit, OnDestroy {
 
     users: User[];
+    errMess: any;
     userSubscription: Subscription;
 
   constructor(private userService: UserService) {}
@@ -20,9 +21,17 @@ export class ListUserComponent implements OnInit, OnDestroy {
       this.userSubscription = this.userService.userSubject.subscribe(
           (users: User[]) => {
               this.users = users;
+              console.log('mise a jour users');
           }
       );
-      this.userService.getAllUsers();
+      this.userService.getAllUsers2();
+      /*
+      this.userService.getAllUsers2().subscribe(
+          users => this.users = users,
+          error => console.log(error)
+      );*/
+
+
   }
 
   ngOnDestroy(): void {
