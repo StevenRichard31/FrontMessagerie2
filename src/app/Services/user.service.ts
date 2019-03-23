@@ -19,19 +19,22 @@ export class UserService {
     }
 
     // ajoute un utilisateur a la bdd
+    /*
     addUser(user: User) {
         this.httpClient
             .post('http://192.168.1.41:3000/user/register', user)
             .subscribe(
                 () => {
                     console.log('Enregistrement terminé !');
+                    // redirection vers la liste des "users"
+                    this.router.navigate(['user/list']);
                 },
                 (error) => {
-                    console.log(error);
-                    this.processHttpMsgService.handleError(error);
+                    return this.processHttpMsgService.handleError(error);
+                    // console.log(this.error);
                 }
             );
-    }
+    }*/
 
     addUser2(user: User) {
         return this.httpClient.post('http://192.168.1.41:3000/user/register', user);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../../Services/user.service';
 import {Router} from '@angular/router';
 import {ProcessHTTPMsgService} from '../../../Services/process-httpmsg.service';
@@ -12,8 +12,14 @@ import {ProcessHTTPMsgService} from '../../../Services/process-httpmsg.service';
 })
 export class RegisterUserComponent implements OnInit {
 
+  hide = true;
   userForm: FormGroup;
-  protected error = null;
+  // Errors HTTP REQUEST Catch
+  errors;
+  // Form object
+  userName =  new FormControl('', [Validators.required, Validators.minLength(5)]);
+  email = new FormControl('', [Validators.required, Validators.email]);
+  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
@@ -28,26 +34,44 @@ export class RegisterUserComponent implements OnInit {
   // function créer formulaire
   initForm() {
     this.userForm = this.formBuilder.group({
-        userName: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', Validators.required]
+        userName :  this.userName,
+        email : this.email,
+        password: this.password
     });
   }
 
   onSubmitForm() {
     // prend les valeurs du formulaire
     const newUser = this.userService.createUser(this.userForm.value);
-    this.userService.addUser2(newUser).subscribe(
+    this.userService.addUser2(newUser)
+        .subscribe(
         () => {
             console.log('Enregistrement terminé !');
             // redirection vers la liste des "users"
             this.router.navigate(['user/list']);
         },
         (error) => {
-            this.error = this.processHttpMsgService.handleError(error);
-            console.log(this.error);
+            this.errors = this.processHttpMsgService.handleError(error);
+            console.log(this.errors);
         }
     );
+  }
+
+  // ERRORS MESSAGES
+  getErrorMessage(field: string) {
+      if (field === 'email') {
+          return this.email.hasError('required') ? 'You must enter a Email' :
+              this.email.hasError('email') ? 'Email non valid' :
+                  '';
+      } else if (field === 'userName') {
+          return this.userName.hasError('required') ? 'You must enter a User Name' :
+              this.userName.hasError('minlength') ? 'Le pseudo doit être composé de 5 caractères minimum ' :
+              '';
+      } else if (field === 'password') {
+          return this.password.hasError('required') ? 'You must enter a Password' :
+              this.password.hasError('minlength') ? 'Le pseudo doit être composé de 8 caractères minimum ' :
+                  '';
+      }
   }
 
 }

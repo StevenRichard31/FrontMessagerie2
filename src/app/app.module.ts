@@ -12,6 +12,10 @@ import {UserService} from './Services/user.service';
 import {ProcessHTTPMsgService} from './Services/process-httpmsg.service';
 import { ErrorPageComponent } from './Views/error/error-page/error-page.component';
 import { Error404Component } from './Views/error/error404/error404.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {CustomMaterialModule} from './Modules/CustomMaterialModule';
+import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from '@angular/material';
+
 
 
 
@@ -39,11 +43,14 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    BrowserAnimationsModule,
+    CustomMaterialModule
   ],
   providers: [
       UserService,
-      ProcessHTTPMsgService
+      ProcessHTTPMsgService,
+      {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
   ],
   bootstrap: [AppComponent]
 })

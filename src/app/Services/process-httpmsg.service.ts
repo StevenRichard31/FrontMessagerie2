@@ -25,7 +25,9 @@ export class ProcessHTTPMsgService {
 
       if (httpErrorResponse.error.error) {
           if (httpErrorResponse.error.error.name === 'SequelizeValidationError') {
-              return httpErrorResponse;
+              const errors = httpErrorResponse.error.error.errors;
+              return errors;
+              // return httpErrorResponse;
           }
       } else {
           const error1 =  JSON.stringify(httpErrorResponse);
