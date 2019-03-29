@@ -11,31 +11,22 @@ export class ProcessHTTPMsgService {
   constructor(private router: Router) { }
 
   public handleError(httpErrorResponse: HttpErrorResponse | any) {
-      /* let errMsg: string;
-
-
-       if (error.error instanceof ErrorEvent) {
-         errMsg = error.error.message;
-       } else {
-         errMsg = `${error.status} - ${error.statusText || ''} ${error.error}`;
-       }*/
-
-    // return throwError(errMsg);
-    // return throwError(error);
 
       if (httpErrorResponse.error.error) {
           if (httpErrorResponse.error.error.name === 'SequelizeValidationError') {
               const errors = httpErrorResponse.error.error.errors;
               return errors;
-              // return httpErrorResponse;
+          } else {
+              return [{error: httpErrorResponse.error.error}];
           }
       } else {
           const error1 =  JSON.stringify(httpErrorResponse);
+          // création DATA
           const navigationExtras: NavigationExtras = {state:  {error: error1} } ;
+          // redirection vers une route avec DATA
           this.router.navigate(['error'], navigationExtras);
       }
 
   }
-
 
 }

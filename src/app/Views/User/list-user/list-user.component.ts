@@ -24,14 +24,7 @@ export class ListUserComponent implements OnInit, OnDestroy {
               console.log('mise a jour users');
           }
       );
-      this.userService.getAllUsers2();
-      /*
-      this.userService.getAllUsers2().subscribe(
-          users => this.users = users,
-          error => console.log(error)
-      );*/
-
-
+      this.userService.getAllUsers();
   }
 
   ngOnDestroy(): void {

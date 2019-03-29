@@ -1,17 +1,19 @@
 import {User} from '../Models/User.model';
-import {Observable, Subject} from 'rxjs';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { Subject} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {catchError, map} from 'rxjs/internal/operators';
 import {ProcessHTTPMsgService} from './process-httpmsg.service';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class UserService {
 
+    IPlocal = 'http://192.168.43.228:3000';
+
+    constructor(private httpClient: HttpClient, private processHttpMsgService: ProcessHTTPMsgService, private router: Router) {}
+
     private users: User[] = [];
     userSubject = new Subject<User[]>();
-
-    constructor(private httpClient: HttpClient, private processHttpMsgService: ProcessHTTPMsgService) {}
 
     // demande à l'observable d'émettre la liste des utilisateurs
     emitUsers() {
@@ -19,50 +21,37 @@ export class UserService {
     }
 
     // ajoute un utilisateur a la bdd
-    /*
-    addUser(user: User) {
-        this.httpClient
-            .post('http://192.168.1.41:3000/user/register', user)
-            .subscribe(
-                () => {
-                    console.log('Enregistrement terminé !');
-                    // redirection vers la liste des "users"
-                    this.router.navigate(['user/list']);
-                },
-                (error) => {
-                    return this.processHttpMsgService.handleError(error);
-                    // console.log(this.error);
-                }
-            );
-    }*/
+    addUserGET() {
+        return this.httpClient.get(this.IPlocal + '/user/register');
+    }
+    addUserPOST(newUser: User, token) {
+        return this.httpClient
+            .post(this.IPlocal + '/user/register', newUser , {
+            headers: new HttpHeaders({
+                'CSRF-Token': token,
+                'Content-Type': 'application/json'
+            }),
+            withCredentials: true});
 
-    addUser2(user: User) {
-        return this.httpClient.post('http://192.168.1.41:3000/user/register', user);
+        // REQUETE utilisant Fetch API
+        // fetch(this.IPlocal + '/user/register', {
+        //     credentials: 'same-origin', // <-- includes cookies in the request
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'CSRF-Token': token // <-- is the csrf token as a header
+        //     },
+        //     body: JSON.stringify(newUser)
+        // })
+        // .then((res) => this.router.navigate(['user/list']))
+        // .then((data) =>  console.log('data: ' + data))
+        // .catch((err) => console.log('err: ' + err));
     }
 
     // récupère la liste de tous les utilisateurs
-    /*
     getAllUsers() {
         this.httpClient
-            .get<any[]>('http://192.168.1.41:3000/user/test')
-            .subscribe(
-                (response) => {
-                    this.users = response;
-                    this.emitUsers();
-                    console.log(response);
-                    console.log('Récupération de la list utilisateur terminé !');
-                },
-                (error) => {
-                    console.log(error);
-                    throw error;
-                }
-            );
-    }*/
-
-    // récupère la liste de tous les utilisateurs
-    getAllUsers2() {
-        this.httpClient
-            .get<User[]>('http://192.168.1.41:3000/user/test')
+            .get<User[]>(this.IPlocal + '/user/test')
             .subscribe(
                 (response) => {
                     this.users = response;

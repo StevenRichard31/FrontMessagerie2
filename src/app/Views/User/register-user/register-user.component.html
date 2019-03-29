@@ -1,51 +1,64 @@
 <h1>Créer votre compte utilisateur</h1>
 
-<div class="container">
-  <form [formGroup]="userForm" (ngSubmit)="onSubmitForm()">
-    <div *ngFor="let error of errors">
-      <li class="alert alert-danger" *ngIf="error.path === 'userName'">{{error.message}}</li>
-    </div>
-    <div class="form-group">
-      <label for="userName">Pseudo :</label>
-      <input type="text" class="form-control" id="userName" formControlName="userName" name="userName">
-    </div>
-    <div *ngFor="let error of errors">
-      <li class="alert alert-danger" *ngIf="error.path === 'email'">{{error.message}}</li>
-    </div>
-    <div class="form-group">
-      <label for="email">Email :</label>
-      <input type="email" class="form-control" id="email" formControlName="email">
-    </div>
-    <div *ngFor="let error of errors">
-      <li class="alert alert-danger" *ngIf="error.path === 'password'">{{error.message}}</li>
-    </div>
-    <div class="form-group">
-      <label for="password">Mot de passe :</label>
-      <input type="password" class="form-control" id="password" formControlName="password">
-    </div>
-    <button class="btn btn-primary" type="submit" [disabled]="userForm.invalid">Enregistrer</button>
-  </form>
-</div>
+<!--<div class="container">-->
+  <!--<form [formGroup]="userForm" (ngSubmit)="onSubmitForm()">-->
+    <!--<div *ngFor="let error of errors">-->
+      <!--<li class="alert alert-danger" *ngIf="error.path && error.path === 'userName'">{{error.message}}</li>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+      <!--<label for="userName">Pseudo :</label>-->
+      <!--<input type="text" class="form-control" id="userName" formControlName="userName" name="userName">-->
+    <!--</div>-->
+    <!--<div *ngFor="let error of errors">-->
+      <!--<li class="alert alert-danger" *ngIf="error.path && error.path === 'email'">{{error.message}}</li>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+      <!--<label for="email">Email :</label>-->
+      <!--<input type="email" class="form-control" id="email" formControlName="email">-->
+    <!--</div>-->
+    <!--<div *ngFor="let error of errors">-->
+      <!--<li class="alert alert-danger" *ngIf="error.path && error.path === 'password'">{{error.message}}</li>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+      <!--<label for="password">Mot de passe :</label>-->
+      <!--<input type="password" class="form-control" id="password" formControlName="password">-->
+    <!--</div>-->
+    <!--<button class="btn btn-primary" type="submit" [disabled]="userForm.invalid">Enregistrer</button>-->
+  <!--</form>-->
+<!--</div>-->
 
+<div *ngFor="let error of errors">
+  <li class="alert alert-danger" *ngIf="!error.path">{{error.error}}</li>
+</div>
 
 <div class="container-fluid" style="border: 1px solid darkred">
   <form class="row" [formGroup]="userForm" (ngSubmit)="onSubmitForm()">
+    <div *ngFor="let error of errors">
+      <li class="alert alert-danger" *ngIf="error.path && error.path === 'userName'">{{error.message}}</li>
+    </div>
     <mat-form-field class="col-12">
       <input matInput placeholder="Pseudo" [formControl]="userName" name="userName">
       <mat-error *ngIf="userName.invalid">{{getErrorMessage('userName')}}</mat-error>
     </mat-form-field>
+    <div *ngFor="let error of errors">
+      <li class="alert alert-danger" *ngIf="error.path && error.path === 'email'">{{error.message}}</li>
+    </div>
     <mat-form-field class="col-12">
-      <input matInput placeholder="Email" [formControl]="email">
+      <input matInput placeholder="Email" [formControl]="email" name="email">
       <mat-error *ngIf="email.invalid">{{getErrorMessage('email')}}</mat-error>
     </mat-form-field>
+    <div *ngFor="let error of errors">
+      <li class="alert alert-danger" *ngIf="error.path && error.path === 'password'">{{error.message}}</li>
+    </div>
     <mat-form-field class="col-12">
-      <input matInput placeholder="Mot de passe" [formControl]="password" [type]="hide ? 'password' : 'text'">
+      <input matInput placeholder="Mot de passe" [formControl]="password" name="password" [type]="hide ? 'password' : 'text'" >
       <mat-error *ngIf="password.invalid">{{getErrorMessage('password')}}</mat-error>
       <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-
     </mat-form-field>
     <button mat-raised-button type="submit" color="primary" [disabled]="userForm.invalid">Enregistrer</button>
+    <meta name="csrf-token" content="{{csrf}}">
   </form>
+  <!--<p>{{csrf}}</p>-->
 
 </div>
 
